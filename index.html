@@ -19,6 +19,7 @@
                 url("https://media.tenor.com/MKkJWYigjycAAAA1/cute-cat-cat-cute.webp");
             background-size: cover;
             background-position: center;
+            position: relative;
         }
 
         .box {
@@ -28,6 +29,8 @@
             border-radius: 20px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
@@ -53,6 +56,7 @@
             justify-content: center;
             gap: 6px;
             position: relative;
+            transition: all 0.2s ease;
         }
 
         button img {
@@ -68,9 +72,9 @@
         #noBtn {
             background: #777;
             color: white;
+            position: relative;
         }
 
-        /* VIDEO SCREEN */
         #videoScreen {
             display: none;
             position: fixed;
@@ -79,6 +83,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            z-index: 10000;
         }
 
         video {
@@ -91,7 +96,6 @@
 
 <body>
 
-    <!-- MAIN BOX -->
     <div class="box" id="mainBox">
         <h1>Wanna hang out with me? 😺💕</h1>
 
@@ -108,7 +112,6 @@
         </div>
     </div>
 
-    <!-- VIDEO (HIDDEN INITIALLY) -->
     <div id="videoScreen">
         <h1 style="color:white;margin-bottom:15px;">
           Nice
@@ -127,34 +130,116 @@
     const videoScreen = document.getElementById("videoScreen");
     const video = document.getElementById("loveVideo");
 
-    // Lock page scrolling
     document.body.style.overflow = "hidden";
 
-    noBtn.addEventListener("mouseover", () => {
-        const margin = 20; // space from screen edges
+    const safeMargin = 20;
+    const boxPadding = 50;
+    let isEscaping = false;
+    let escapeCount = 0;
 
-        const rect = noBtn.getBoundingClientRect();
+    function getRandomPosition() {
+        const btnWidth = noBtn.offsetWidth;
+        const btnHeight = noBtn.offsetHeight;
+        const maxX = window.innerWidth - btnWidth - safeMargin;
+        const maxY = window.innerHeight - btnHeight - safeMargin;
+        const minX = safeMargin;
+        const minY = safeMargin;
+        const mainBoxRect = mainBox.getBoundingClientRect();
 
-        const btnWidth = rect.width;
-        const btnHeight = rect.height;
+        let targetX, targetY;
+        let attempts = 0;
 
-        const maxX = window.innerWidth - btnWidth - margin;
-        const maxY = window.innerHeight - btnHeight - margin;
+        do {
+            targetX = Math.random() * (maxX - minX) + minX;
+            targetY = Math.random() * (maxY - minY) + minY;
+            attempts++;
 
-        // Generate safe random position
-        const x = Math.random() * (maxX - margin) + margin;
-        const y = Math.random() * (maxY - margin) + margin;
+            const isTooCloseToBox =
+                targetX + btnWidth > mainBoxRect.left - boxPadding &&
+                targetX < mainBoxRect.right + boxPadding &&
+                targetY + btnHeight > mainBoxRect.top - boxPadding &&
+                targetY < mainBoxRect.bottom + boxPadding;
 
-        noBtn.style.position = "fixed"; // IMPORTANT
-        noBtn.style.left = x + "px";
-        noBtn.style.top = y + "px";
+            if (!isTooCloseToBox || attempts > 30) break;
+        } while (true);
+
+        return { x: targetX, y: targetY };
+    }
+
+    function moveButtonToRandomPosition() {
+        const position = getRandomPosition();
+
+        noBtn.style.position = "fixed";
+        noBtn.style.left = position.x + "px";
+        noBtn.style.top = position.y + "px";
+        noBtn.style.zIndex = "1000";
+
+        isEscaping = true;
+        escapeCount++;
+    }
+
+    noBtn.addEventListener("mouseover", function(e) {
+        e.stopPropagation();
+        moveButtonToRandomPosition();
     });
 
-    // Play video after clicking YES
+    noBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        moveButtonToRandomPosition();
+    });
+
     yesBtn.addEventListener("click", () => {
         mainBox.style.display = "none";
         videoScreen.style.display = "flex";
         video.play();
+    });
+
+    window.addEventListener('resize', () => {
+        if (isEscaping) {
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            let currentX = parseFloat(noBtn.style.left) || safeMargin;
+            let currentY = parseFloat(noBtn.style.top) || safeMargin;
+
+            currentX = Math.max(safeMargin, Math.min(currentX, window.innerWidth - btnWidth - safeMargin));
+            currentY = Math.max(safeMargin, Math.min(currentY, window.innerHeight - btnHeight - safeMargin));
+
+            noBtn.style.left = currentX + "px";
+            noBtn.style.top = currentY + "px";
+        }
+    });
+
+    function checkButtonPosition() {
+        if (isEscaping) {
+            const rect = noBtn.getBoundingClientRect();
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            const isOffScreen =
+                rect.right < -btnWidth ||
+                rect.bottom < -btnHeight ||
+                rect.left > window.innerWidth + btnWidth ||
+                rect.top > window.innerHeight + btnHeight;
+
+            const isPartiallyOffScreen =
+                rect.left < -10 ||
+                rect.top < -10 ||
+                rect.right > window.innerWidth + 10 ||
+                rect.bottom > window.innerHeight + 10;
+
+            if (isOffScreen || isPartiallyOffScreen) {
+                moveButtonToRandomPosition();
+            }
+        }
+    }
+
+    setInterval(checkButtonPosition, 300);
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            moveButtonToRandomPosition();
+        }, 100);
     });
 </script>
 
