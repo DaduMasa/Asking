@@ -43,6 +43,7 @@
             gap: 20px;
             justify-content: center;
             margin-top: 20px;
+            position: relative;
         }
 
         button {
@@ -136,6 +137,19 @@
     const boxPadding = 50;
     let isEscaping = false;
     let escapeCount = 0;
+    let hasMoved = false;
+
+    let originalPosition = null;
+
+    function saveOriginalPosition() {
+        const rect = noBtn.getBoundingClientRect();
+        originalPosition = {
+            x: rect.left,
+            y: rect.top,
+            width: noBtn.offsetWidth,
+            height: noBtn.offsetHeight
+        };
+    }
 
     function getRandomPosition() {
         const btnWidth = noBtn.offsetWidth;
@@ -175,7 +189,19 @@
         noBtn.style.zIndex = "1000";
 
         isEscaping = true;
+        hasMoved = true;
         escapeCount++;
+    }
+
+    function resetButtonToOriginalPosition() {
+        if (originalPosition) {
+            noBtn.style.position = "relative";
+            noBtn.style.left = "auto";
+            noBtn.style.top = "auto";
+            noBtn.style.zIndex = "auto";
+            isEscaping = false;
+            hasMoved = false;
+        }
     }
 
     noBtn.addEventListener("mouseover", function(e) {
@@ -195,7 +221,7 @@
     });
 
     window.addEventListener('resize', () => {
-        if (isEscaping) {
+        if (isEscaping && hasMoved) {
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
 
@@ -211,7 +237,7 @@
     });
 
     function checkButtonPosition() {
-        if (isEscaping) {
+        if (isEscaping && hasMoved) {
             const rect = noBtn.getBoundingClientRect();
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
@@ -234,13 +260,14 @@
         }
     }
 
-    setInterval(checkButtonPosition, 300);
-
     window.addEventListener('load', () => {
         setTimeout(() => {
-            moveButtonToRandomPosition();
+            saveOriginalPosition();
+            resetButtonToOriginalPosition();
         }, 100);
     });
+
+    setInterval(checkButtonPosition, 300);
 </script>
 
 </body>
