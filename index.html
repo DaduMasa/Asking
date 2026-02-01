@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Wanna Hang Out?</title>
-
     <style>
         body {
             margin: 0;
@@ -19,9 +18,7 @@
                 url("https://media.tenor.com/MKkJWYigjycAAAA1/cute-cat-cat-cute.webp");
             background-size: cover;
             background-position: center;
-            position: relative;
         }
-
         .box {
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(4px);
@@ -29,53 +26,55 @@
             border-radius: 20px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
-
         h1 {
             color: #ff4d6d;
         }
-
+        h2 {
+            color: #ff4d6d;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
         .grid {
             display: grid;
             grid-template-columns: repeat(2, 120px);
             gap: 20px;
             justify-content: center;
             margin-top: 20px;
-            position: relative;
         }
-
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 140px);
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
         button {
             font-size: 16px;
-            padding: 10px;
+            padding: 15px;
             border: none;
             border-radius: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             position: relative;
             transition: all 0.2s ease;
+            flex-direction: column;
         }
-
         button img {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
         }
-
         #yesBtn {
             background: #ff4d6d;
             color: white;
         }
-
         #noBtn {
             background: #777;
             color: white;
-            position: relative;
         }
-
         #videoScreen {
             display: none;
             position: fixed;
@@ -84,28 +83,88 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            z-index: 10000;
         }
-
+        #optionsScreen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
         video {
             width: 80%;
             max-width: 600px;
             border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        .confirm-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+        .options-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+        }
+        .confirm-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 120px);
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        #confirmYesBtn {
+            background: #4CAF50;
+            color: white;
+        }
+        #confirmNoBtn {
+            background: #777;
+            color: white;
+        }
+        .option-btn {
+            background: #ff4d6d;
+            color: white;
+            font-size: 18px;
+            padding: 20px 10px;
+        }
+        .option-btn:hover {
+            background: #ff3359;
+            transform: translateY(-3px);
+        }
+        .success-msg {
+            color: #4CAF50;
+            font-size: 18px;
+            margin-top: 20px;
+            display: none;
+        }
+        .loading {
+            display: none;
+            color: #ff4d6d;
+            font-size: 16px;
+            margin-top: 15px;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
-
 <body>
-
     <div class="box" id="mainBox">
         <h1>Wanna hang out with me? 😺💕</h1>
-
         <div class="grid">
             <button id="yesBtn">
                 Yes
                 <img src="https://media.tenor.com/GJUz8DogSTUAAAAm/cute-cat-cutie.webp">
             </button>
-
             <button id="noBtn">
                 No
                 <img src="https://media.tenor.com/QIL_2SBkkQ4AAAAm/cat-bleh-meme-cat-blehh.webp">
@@ -114,104 +173,143 @@
     </div>
 
     <div id="videoScreen">
-        <h1 style="color:white;margin-bottom:15px;">
-          Nice
-        </h1>
-
         <video id="loveVideo" controls autoplays>
             <source src="Reel.mp4" type="video/mp4">
             Your browser does not support video.
         </video>
+        <div class="confirm-box">
+            <h2>Are you sure? 🤔</h2>
+            <div class="confirm-grid">
+                <button id="confirmYesBtn">
+                    Yes
+                    <img src="https://media.tenor.com/GJUz8DogSTUAAAAm/cute-cat-cutie.webp">
+                </button>
+                <button id="confirmNoBtn">
+                    No
+                    <img src="https://media.tenor.com/QIL_2SBkkQ4AAAAm/cat-bleh-meme-cat-blehh.webp">
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="optionsScreen">
+        <div class="options-box">
+            <h2>Where should we go? 🗺️</h2>
+            <div class="options-grid">
+                <button class="option-btn" id="parkBtn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2909/2909797.png">
+                    Park/Garden
+                </button>
+                <button class="option-btn" id="cafeBtn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3082/3082383.png">
+                    Cafe
+                </button>
+                <button class="option-btn" id="mallBtn">
+                    <img src="https://cdn-icons-png.flaticon.com/512/619/619153.png">
+                    Mall
+                </button>
+            </div>
+            <div class="loading" id="loadingMsg">
+                Sending your choice... 💌
+            </div>
+            <div class="success-msg" id="successMsg">
+                ✅ Perfect choice! Let's plan it soon!
+            </div>
+        </div>
     </div>
 
 <script>
+    document.body.style.overflow = "hidden";
+    
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const mainBox = document.getElementById("mainBox");
     const videoScreen = document.getElementById("videoScreen");
     const video = document.getElementById("loveVideo");
+    const confirmYesBtn = document.getElementById("confirmYesBtn");
+    const confirmNoBtn = document.getElementById("confirmNoBtn");
+    const optionsScreen = document.getElementById("optionsScreen");
+    const parkBtn = document.getElementById("parkBtn");
+    const cafeBtn = document.getElementById("cafeBtn");
+    const mallBtn = document.getElementById("mallBtn");
+    const successMsg = document.getElementById("successMsg");
+    const loadingMsg = document.getElementById("loadingMsg");
+    
+    let firstNoMoved = false;
+    let secondNoMoved = false;
 
-    document.body.style.overflow = "hidden";
-
-    const safeMargin = 20;
-    const boxPadding = 50;
-    let isEscaping = false;
-    let escapeCount = 0;
-    let hasMoved = false;
-
-    let originalPosition = null;
-
-    function saveOriginalPosition() {
-        const rect = noBtn.getBoundingClientRect();
-        originalPosition = {
-            x: rect.left,
-            y: rect.top,
-            width: noBtn.offsetWidth,
-            height: noBtn.offsetHeight
-        };
-    }
-
-    function getRandomPosition() {
-        const btnWidth = noBtn.offsetWidth;
-        const btnHeight = noBtn.offsetHeight;
-        const maxX = window.innerWidth - btnWidth - safeMargin;
-        const maxY = window.innerHeight - btnHeight - safeMargin;
-        const minX = safeMargin;
-        const minY = safeMargin;
-        const mainBoxRect = mainBox.getBoundingClientRect();
-
+    function moveButton(button, avoidElement = null) {
+        const margin = 20;
+        const btnWidth = button.offsetWidth;
+        const btnHeight = button.offsetHeight;
+        const maxX = window.innerWidth - btnWidth - margin;
+        const maxY = window.innerHeight - btnHeight - margin;
+        const minX = margin;
+        const minY = margin;
         let targetX, targetY;
         let attempts = 0;
-
         do {
             targetX = Math.random() * (maxX - minX) + minX;
             targetY = Math.random() * (maxY - minY) + minY;
             attempts++;
-
-            const isTooCloseToBox =
-                targetX + btnWidth > mainBoxRect.left - boxPadding &&
-                targetX < mainBoxRect.right + boxPadding &&
-                targetY + btnHeight > mainBoxRect.top - boxPadding &&
-                targetY < mainBoxRect.bottom + boxPadding;
-
-            if (!isTooCloseToBox || attempts > 30) break;
+            if (avoidElement) {
+                const avoidRect = avoidElement.getBoundingClientRect();
+                const padding = 50;
+                const isTooClose = 
+                    targetX + btnWidth > avoidRect.left - padding &&
+                    targetX < avoidRect.right + padding &&
+                    targetY + btnHeight > avoidRect.top - padding &&
+                    targetY < avoidRect.bottom + padding;
+                if (!isTooClose || attempts > 30) {
+                    break;
+                }
+            } else {
+                break;
+            }
         } while (true);
-
-        return { x: targetX, y: targetY };
-    }
-
-    function moveButtonToRandomPosition() {
-        const position = getRandomPosition();
-
-        noBtn.style.position = "fixed";
-        noBtn.style.left = position.x + "px";
-        noBtn.style.top = position.y + "px";
-        noBtn.style.zIndex = "1000";
-
-        isEscaping = true;
-        hasMoved = true;
-        escapeCount++;
-    }
-
-    function resetButtonToOriginalPosition() {
-        if (originalPosition) {
-            noBtn.style.position = "relative";
-            noBtn.style.left = "auto";
-            noBtn.style.top = "auto";
-            noBtn.style.zIndex = "auto";
-            isEscaping = false;
-            hasMoved = false;
-        }
+        button.style.position = "fixed";
+        button.style.left = targetX + "px";
+        button.style.top = targetY + "px";
+        button.style.zIndex = "1000";
+        return true;
     }
 
     noBtn.addEventListener("mouseover", function(e) {
         e.stopPropagation();
-        moveButtonToRandomPosition();
+        if (!firstNoMoved) {
+            firstNoMoved = moveButton(this, mainBox);
+        } else {
+            moveButton(this, mainBox);
+        }
     });
 
     noBtn.addEventListener("click", function(e) {
         e.stopPropagation();
-        moveButtonToRandomPosition();
+        if (!firstNoMoved) {
+            firstNoMoved = moveButton(this, mainBox);
+        } else {
+            moveButton(this, mainBox);
+        }
+    });
+
+    confirmNoBtn.addEventListener("mouseover", function(e) {
+        e.stopPropagation();
+        const confirmBox = document.querySelector('.confirm-box');
+        if (!secondNoMoved) {
+            secondNoMoved = moveButton(this, confirmBox);
+        } else {
+            moveButton(this, confirmBox);
+        }
+    });
+
+    confirmNoBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        const confirmBox = document.querySelector('.confirm-box');
+        if (!secondNoMoved) {
+            secondNoMoved = moveButton(this, confirmBox);
+        } else {
+            moveButton(this, confirmBox);
+        }
     });
 
     yesBtn.addEventListener("click", () => {
@@ -220,55 +318,134 @@
         video.play();
     });
 
+    confirmYesBtn.addEventListener("click", () => {
+        videoScreen.style.display = "none";
+        optionsScreen.style.display = "flex";
+    });
+
+    function initEmailJS() {
+        // Replace these with your actual EmailJS credentials
+        emailjs.init("mc1ql27wG45e9WDH6");
+        
+        // Test connection
+        console.log("EmailJS initialized");
+    }
+
+    function sendChoiceEmail(choice) {
+        loadingMsg.style.display = "block";
+        successMsg.style.display = "none";
+        
+        const templateParams = {
+            choice: choice,
+            date: new Date().toLocaleString(),
+            from: "Secret Admirer",
+            to_email: "faketimepass93@gmail.com" // Your email where you want to receive
+        };
+        
+        // Send email using EmailJS
+        emailjs.send("service_dok75fi", "template_4ldyoi8", templateParams)
+            .then(function(response) {
+                console.log("Email sent successfully!", response.status, response.text);
+                loadingMsg.style.display = "none";
+                successMsg.style.display = "block";
+                
+                setTimeout(() => {
+                    successMsg.style.display = "none";
+                    alert(`Awesome! ${choice} sounds perfect! 🌟\nI'll text you the details soon!`);
+                }, 2000);
+            })
+            .catch(function(error) {
+                console.error("Failed to send email:", error);
+                loadingMsg.style.display = "none";
+                
+                // Fallback if EmailJS fails
+                alert(`Great choice! ${choice} it is! 💕\n(I'll text you to plan!)`);
+            });
+    }
+
+    parkBtn.addEventListener("click", () => {
+        sendChoiceEmail("Park/Garden");
+    });
+
+    cafeBtn.addEventListener("click", () => {
+        sendChoiceEmail("Cafe");
+    });
+
+    mallBtn.addEventListener("click", () => {
+        sendChoiceEmail("Mall");
+    });
+
     window.addEventListener('resize', () => {
-        if (isEscaping && hasMoved) {
+        if (firstNoMoved) {
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
-
-            let currentX = parseFloat(noBtn.style.left) || safeMargin;
-            let currentY = parseFloat(noBtn.style.top) || safeMargin;
-
-            currentX = Math.max(safeMargin, Math.min(currentX, window.innerWidth - btnWidth - safeMargin));
-            currentY = Math.max(safeMargin, Math.min(currentY, window.innerHeight - btnHeight - safeMargin));
-
+            const margin = 20;
+            let currentX = parseFloat(noBtn.style.left) || margin;
+            let currentY = parseFloat(noBtn.style.top) || margin;
+            currentX = Math.max(margin, Math.min(currentX, window.innerWidth - btnWidth - margin));
+            currentY = Math.max(margin, Math.min(currentY, window.innerHeight - btnHeight - margin));
             noBtn.style.left = currentX + "px";
             noBtn.style.top = currentY + "px";
         }
+        if (secondNoMoved) {
+            const btnWidth = confirmNoBtn.offsetWidth;
+            const btnHeight = confirmNoBtn.offsetHeight;
+            const margin = 20;
+            let currentX = parseFloat(confirmNoBtn.style.left) || margin;
+            let currentY = parseFloat(confirmNoBtn.style.top) || margin;
+            currentX = Math.max(margin, Math.min(currentX, window.innerWidth - btnWidth - margin));
+            currentY = Math.max(margin, Math.min(currentY, window.innerHeight - btnHeight - margin));
+            confirmNoBtn.style.left = currentX + "px";
+            confirmNoBtn.style.top = currentY + "px";
+        }
     });
 
-    function checkButtonPosition() {
-        if (isEscaping && hasMoved) {
+    function checkButtons() {
+        if (firstNoMoved) {
             const rect = noBtn.getBoundingClientRect();
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
-
-            const isOffScreen =
-                rect.right < -btnWidth ||
-                rect.bottom < -btnHeight ||
-                rect.left > window.innerWidth + btnWidth ||
+            const isOff = 
+                rect.right < -btnWidth || 
+                rect.bottom < -btnHeight || 
+                rect.left > window.innerWidth + btnWidth || 
                 rect.top > window.innerHeight + btnHeight;
-
-            const isPartiallyOffScreen =
-                rect.left < -10 ||
-                rect.top < -10 ||
-                rect.right > window.innerWidth + 10 ||
+            const isPartial = 
+                rect.left < -10 || 
+                rect.top < -10 || 
+                rect.right > window.innerWidth + 10 || 
                 rect.bottom > window.innerHeight + 10;
-
-            if (isOffScreen || isPartiallyOffScreen) {
-                moveButtonToRandomPosition();
+            if (isOff || isPartial) {
+                moveButton(noBtn, mainBox);
+            }
+        }
+        if (secondNoMoved) {
+            const rect = confirmNoBtn.getBoundingClientRect();
+            const btnWidth = confirmNoBtn.offsetWidth;
+            const btnHeight = confirmNoBtn.offsetHeight;
+            const confirmBox = document.querySelector('.confirm-box');
+            const isOff = 
+                rect.right < -btnWidth || 
+                rect.bottom < -btnHeight || 
+                rect.left > window.innerWidth + btnWidth || 
+                rect.top > window.innerHeight + btnHeight;
+            const isPartial = 
+                rect.left < -10 || 
+                rect.top < -10 || 
+                rect.right > window.innerWidth + 10 || 
+                rect.bottom > window.innerHeight + 10;
+            if (isOff || isPartial) {
+                moveButton(confirmNoBtn, confirmBox);
             }
         }
     }
-
+    
+    // Initialize EmailJS when page loads
     window.addEventListener('load', () => {
-        setTimeout(() => {
-            saveOriginalPosition();
-            resetButtonToOriginalPosition();
-        }, 100);
+        initEmailJS();
     });
-
-    setInterval(checkButtonPosition, 300);
+    
+    setInterval(checkButtons, 300);
 </script>
-
 </body>
 </html>
