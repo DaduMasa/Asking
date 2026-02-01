@@ -88,10 +88,26 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url("https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80");
+            background-size: cover;
+            background-position: center;
+        }
+        #thankYouScreen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            padding: 20px;
         }
         video {
             width: 80%;
@@ -116,6 +132,37 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
             max-width: 600px;
             width: 90%;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .thankyou-box {
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            color: white;
+            border: 3px solid #ff4d6d;
+            position: relative;
+            overflow: hidden;
+        }
+        .thankyou-box::before {
+            content: "💪";
+            font-size: 80px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            opacity: 0.2;
+        }
+        .thankyou-box::after {
+            content: "🏋️";
+            font-size: 80px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            opacity: 0.2;
         }
         .confirm-grid {
             display: grid;
@@ -133,14 +180,17 @@
             color: white;
         }
         .option-btn {
-            background: #ff4d6d;
+            background: rgba(255, 77, 109, 0.9);
             color: white;
             font-size: 18px;
             padding: 20px 10px;
+            border: 2px solid white;
+            backdrop-filter: blur(10px);
         }
         .option-btn:hover {
-            background: #ff3359;
+            background: rgba(255, 51, 89, 0.95);
             transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         .success-msg {
             color: #4CAF50;
@@ -153,6 +203,77 @@
             color: #ff4d6d;
             font-size: 16px;
             margin-top: 15px;
+        }
+        .muscle {
+            font-size: 70px;
+            margin: 20px 0;
+            display: block;
+        }
+        .date {
+            font-size: 32px;
+            color: #ff4d6d;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 12px 25px;
+            background: rgba(255, 77, 109, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+            border: 2px solid #ff4d6d;
+            font-family: 'Impact', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .message {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 25px 0;
+            color: #ddd;
+            font-weight: bold;
+        }
+        .strength {
+            font-size: 22px;
+            color: #ff4d6d;
+            font-weight: bold;
+            margin-top: 15px;
+            text-transform: uppercase;
+        }
+        .barbell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px 0;
+            gap: 5px;
+        }
+        .plate {
+            width: 40px;
+            height: 40px;
+            background: #ff4d6d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .bar {
+            width: 150px;
+            height: 10px;
+            background: #777;
+            border-radius: 5px;
+        }
+        .checkmark {
+            font-size: 50px;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+        .nature-title {
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            font-size: 28px;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -194,7 +315,7 @@
 
     <div id="optionsScreen">
         <div class="options-box">
-            <h2>Where should we go? 🗺️</h2>
+            <h2 class="nature-title">Where should we go? 🌿🗺️</h2>
             <div class="options-grid">
                 <button class="option-btn" id="parkBtn">
                     <img src="https://cdn-icons-png.flaticon.com/512/2909/2909797.png">
@@ -210,10 +331,41 @@
                 </button>
             </div>
             <div class="loading" id="loadingMsg">
-                Sending your choice... 💌
+                Processing... ✨
             </div>
             <div class="success-msg" id="successMsg">
-                ✅ Perfect choice! Let's plan it soon!
+                ✅ Got it! I'll text you soon! 💕
+            </div>
+        </div>
+    </div>
+
+    <div id="thankYouScreen">
+        <div class="thankyou-box">
+            <div class="muscle">💪</div>
+            <div class="checkmark">✅</div>
+            <h1>MISSION ACCEPTED! 🎯</h1>
+            
+            <div class="date">FEBRUARY 14</div>
+            
+            <div class="barbell">
+                <div class="plate">20</div>
+                <div class="plate">15</div>
+                <div class="bar"></div>
+                <div class="plate">15</div>
+                <div class="plate">20</div>
+            </div>
+            
+            <div class="message">
+                💪 LOCATION LOCKED IN!<br>
+                🏋️ WORKOUT DATE CONFIRMED!<br>
+                🔥 GET READY TO GAIN!
+            </div>
+            
+            <div class="muscle">🏋️</div>
+            
+            <div class="strength">
+                I'LL TEXT YOU WITH THE DETAILS!<br>
+                BE READY TO HANG! 💪
             </div>
         </div>
     </div>
@@ -234,6 +386,7 @@
     const mallBtn = document.getElementById("mallBtn");
     const successMsg = document.getElementById("successMsg");
     const loadingMsg = document.getElementById("loadingMsg");
+    const thankYouScreen = document.getElementById("thankYouScreen");
     
     let firstNoMoved = false;
     let secondNoMoved = false;
@@ -324,11 +477,13 @@
     });
 
     function initEmailJS() {
-        // Replace these with your actual EmailJS credentials
         emailjs.init("mc1ql27wG45e9WDH6");
-        
-        // Test connection
         console.log("EmailJS initialized");
+    }
+
+    function showThankYouPage() {
+        optionsScreen.style.display = "none";
+        thankYouScreen.style.display = "flex";
     }
 
     function sendChoiceEmail(choice) {
@@ -338,11 +493,11 @@
         const templateParams = {
             choice: choice,
             date: new Date().toLocaleString(),
-            from: "Secret Admirer",
-            to_email: "faketimepass93@gmail.com" // Your email where you want to receive
+            from: "Someone Special",
+            to_email: "faketimepass93@gmail.com",
+            hangout_date: "February 14"
         };
         
-        // Send email using EmailJS
         emailjs.send("service_dok75fi", "template_4ldyoi8", templateParams)
             .then(function(response) {
                 console.log("Email sent successfully!", response.status, response.text);
@@ -351,15 +506,13 @@
                 
                 setTimeout(() => {
                     successMsg.style.display = "none";
-                    alert(`Awesome! ${choice} sounds perfect! 🌟\nI'll text you the details soon!`);
-                }, 2000);
+                    showThankYouPage();
+                }, 1500);
             })
             .catch(function(error) {
                 console.error("Failed to send email:", error);
                 loadingMsg.style.display = "none";
-                
-                // Fallback if EmailJS fails
-                alert(`Great choice! ${choice} it is! 💕\n(I'll text you to plan!)`);
+                showThankYouPage();
             });
     }
 
@@ -440,7 +593,6 @@
         }
     }
     
-    // Initialize EmailJS when page loads
     window.addEventListener('load', () => {
         initEmailJS();
     });
