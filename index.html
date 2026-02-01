@@ -7,6 +7,8 @@
     body {
       margin: 0;
       height: 100vh;
+      width: 100vw;
+      overflow: hidden; /* IMPORTANT: no scrolling */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,12 +22,13 @@
     }
 
     .box {
-      background: rgba(255, 255, 255, 0.40); /* more transparent */
+      background: rgba(255, 255, 255, 0.40);
       backdrop-filter: blur(4px);
       padding: 40px;
       border-radius: 20px;
       text-align: center;
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      position: relative;
     }
 
     h1 {
@@ -65,46 +68,44 @@
 
   <div class="box">
     <h1>Wanna hang out with me? 😺💕</h1>
+
     <button id="yesBtn">
       Yes
-      <img src="https://media.tenor.com/GJUz8DogSTUAAAAm/cute-cat-cutie.webp" alt="cute cat">
+      <img src="https://media.tenor.com/GJUz8DogSTUAAAAm/cute-cat-cutie.webp">
     </button>
+
     <button id="noBtn">
       No
-      <img src="https://media.tenor.com/QIL_2SBkkQ4AAAAm/cat-bleh-meme-cat-blehh.webp" alt="no cat">
+      <img src="https://media.tenor.com/QIL_2SBkkQ4AAAAm/cat-bleh-meme-cat-blehh.webp">
     </button>
   </div>
 
- <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-  (function(){
-    emailjs.init("mc1ql27wG45e9WDH6"); // replace
-  })();
+  <script>
+    const noBtn = document.getElementById("noBtn");
 
-  const noBtn = document.getElementById("noBtn");
+    noBtn.addEventListener("mouseover", () => {
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
 
-  noBtn.addEventListener("mouseover", () => {
-    const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
+      const maxX = window.innerWidth - btnWidth - 20;
+      const maxY = window.innerHeight - btnHeight - 20;
 
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  });
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
 
-  document.getElementById("yesBtn").addEventListener("click", () => {
-
-    emailjs.send("service_pf6uefn", "template_dqwngu1", {
-      time: new Date().toLocaleString()
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
     });
 
-    document.body.innerHTML =
-      "<h1 style='color:white;'>Yay 😻 Can’t wait to hang out 💕</h1>";
-    document.body.style.background = "#ff6f91";
-    document.body.style.display = "flex";
-    document.body.style.justifyContent = "center";
-    document.body.style.alignItems = "center";
-  });
-</script>
+    document.getElementById("yesBtn").addEventListener("click", () => {
+      document.body.innerHTML =
+        "<h1 style='color:white;'>Yay 😻 Can’t wait to hang out 💕</h1>";
+      document.body.style.background = "#ff6f91";
+      document.body.style.display = "flex";
+      document.body.style.justifyContent = "center";
+      document.body.style.alignItems = "center";
+    });
+  </script>
 
 </body>
 </html>
