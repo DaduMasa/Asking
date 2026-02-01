@@ -14,6 +14,7 @@ body{
   justify-content:center;
   align-items:center;
   font-family:Arial, sans-serif;
+  position: relative; /* IMPORTANT */
 
   background:
     linear-gradient(rgba(255,192,203,0.15), rgba(255,192,203,0.15)),
@@ -35,7 +36,6 @@ h1{
   color:#ff4d6d;
 }
 
-/* GRID AREA */
 .grid{
   display:grid;
   grid-template-columns: repeat(3, 120px);
@@ -71,6 +71,7 @@ button img{
 #noBtn{
   background:#777;
   color:white;
+  position:absolute; /* IMPORTANT */
 }
 </style>
 </head>
@@ -80,7 +81,7 @@ button img{
 <div class="box">
   <h1>Wanna hang out with me? 😺💕</h1>
 
-  <div class="grid" id="grid">
+  <div class="grid">
     <button id="yesBtn">
       Yes
       <img src="https://media.tenor.com/GJUz8DogSTUAAAAm/cute-cat-cutie.webp">
@@ -92,35 +93,42 @@ button img{
     </button>
   </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-  (function(){
-    emailjs.init("mc1ql27wG45e9WDH6"); // replace
-  })();
+(function(){
+  emailjs.init("mc1ql27wG45e9WDH6");
+})();
 
-  const noBtn = document.getElementById("noBtn");
+const noBtn = document.getElementById("noBtn");
+const container = document.body; // background area
 
-  noBtn.addEventListener("mouseover", () => {
-    const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
+noBtn.addEventListener("mouseover", () => {
+  const containerRect = container.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
 
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+  const maxX = containerRect.width - btnRect.width - 20;
+  const maxY = containerRect.height - btnRect.height - 20;
+
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
+
+document.getElementById("yesBtn").addEventListener("click", () => {
+  emailjs.send("service_pf6uefn", "template_dqwngu1", {
+    time: new Date().toLocaleString()
   });
 
-  document.getElementById("yesBtn").addEventListener("click", () => {
-
-    emailjs.send("service_pf6uefn", "template_dqwngu1", {
-      time: new Date().toLocaleString()
-    });
-
-    document.body.innerHTML =
-      "<h1 style='color:white;'>Yay 😻 Can’t wait to hang out 💕</h1>";
-    document.body.style.background = "#ff6f91";
-    document.body.style.display = "flex";
-    document.body.style.justifyContent = "center";
-    document.body.style.alignItems = "center";
-  });
+  document.body.innerHTML =
+    "<h1 style='color:white;'>Yay 😻 Can’t wait to hang out 💕</h1>";
+  document.body.style.background = "#ff6f91";
+  document.body.style.display = "flex";
+  document.body.style.justifyContent = "center";
+  document.body.style.alignItems = "center";
+});
 </script>
 
 </body>
