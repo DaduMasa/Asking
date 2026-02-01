@@ -14,8 +14,7 @@
             justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
-
-            background: 
+            background:
                 linear-gradient(rgba(255,192,203,0.15), rgba(255,192,203,0.15)),
                 url("https://media.tenor.com/MKkJWYigjycAAAA1/cute-cat-cat-cute.webp");
             background-size: cover;
@@ -35,14 +34,11 @@
             color: #ff4d6d;
         }
 
-        /* GRID AREA */
         .grid {
             display: grid;
-            grid-template-columns: repeat(3, 120px);
-            grid-template-rows: repeat(3, 80px);
-            gap: 15px;
+            grid-template-columns: repeat(2, 120px);
+            gap: 20px;
             justify-content: center;
-            align-items: center;
             margin-top: 20px;
         }
 
@@ -73,14 +69,33 @@
             background: #777;
             color: white;
         }
+
+        /* VIDEO SCREEN */
+        #videoScreen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: black;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        video {
+            width: 80%;
+            max-width: 600px;
+            border-radius: 20px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="box">
+
+    <!-- MAIN BOX -->
+    <div class="box" id="mainBox">
         <h1>Wanna hang out with me? 😺💕</h1>
 
-        <div class="grid" id="grid">
+        <div class="grid">
             <button id="yesBtn">
                 Yes
                 <img src="https://media.tenor.com/GJUz8DogSTUAAAAm/cute-cat-cutie.webp">
@@ -92,48 +107,56 @@
             </button>
         </div>
     </div>
-     <div id="videoScreen">
-        <h1 style="color:white;margin-bottom:20px;">
-            Yay 😻 Can’t wait to hang out 💕
+
+    <!-- VIDEO (HIDDEN INITIALLY) -->
+    <div id="videoScreen">
+        <h1 style="color:white;margin-bottom:15px;">
+          Nice
         </h1>
 
-        <video id="loveVideo" controls autoplay>
-            <source src="Reel.mp4" type="video/mp4">
+        <video id="loveVideo" controls>
+            <source src="love.mp4" type="video/mp4">
             Your browser does not support video.
         </video>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const mainBox = document.getElementById("mainBox");
+    const videoScreen = document.getElementById("videoScreen");
+    const video = document.getElementById("loveVideo");
 
-    <script>
-        (function () {
-            emailjs.init("mc1ql27wG45e9WDH6"); // replace with your public key
-        })();
+    // Lock page scrolling
+    document.body.style.overflow = "hidden";
 
-        const noBtn = document.getElementById("noBtn");
+    noBtn.addEventListener("mouseover", () => {
+        const margin = 20; // space from screen edges
 
-        noBtn.addEventListener("mouseover", () => {
-            const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
+        const rect = noBtn.getBoundingClientRect();
 
-            noBtn.style.position = "absolute";
-            noBtn.style.left = x + "px";
-            noBtn.style.top = y + "px";
-        });
+        const btnWidth = rect.width;
+        const btnHeight = rect.height;
 
-        document.getElementById("yesBtn").addEventListener("click", () => {
-            emailjs.send("service_pf6uefn", "template_dqwngu1", {
-                time: new Date().toLocaleString()
-            });
+        const maxX = window.innerWidth - btnWidth - margin;
+        const maxY = window.innerHeight - btnHeight - margin;
 
-            document.body.innerHTML = 
-                "<h1 style='color:white;'>Yay 😻 Can’t wait to hang out 💕</h1>";
+        // Generate safe random position
+        const x = Math.random() * (maxX - margin) + margin;
+        const y = Math.random() * (maxY - margin) + margin;
 
-            document.body.style.background = "#ff6f91";
-            document.body.style.display = "flex";
-            document.body.style.justifyContent = "center";
-            document.body.style.alignItems = "center";
-        });
-    </script>
+        noBtn.style.position = "fixed"; // IMPORTANT
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+    });
+
+    // Play video after clicking YES
+    yesBtn.addEventListener("click", () => {
+        mainBox.style.display = "none";
+        videoScreen.style.display = "flex";
+        video.play();
+    });
+</script>
+
 </body>
 </html>
